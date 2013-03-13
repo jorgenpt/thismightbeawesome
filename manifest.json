@@ -1,15 +1,19 @@
 {
+   "name": "This Might Be Awesome",
+   "description": "TMBO script to enhance the browsing experience",
+   "version": "0.2",
    "content_scripts": [ {
       "js": [ "thismightbeawesome.user.js" ],
       "matches": [
-        "http://thismight.be/offensive/*c=comments*",
-        "https://thismight.be/offensive/*c=comments*"
+        "http://thismight.be/offensive/*",
+        "https://thismight.be/offensive/*"
+      ],
+      "include_globs": [
+        "*/*c=comments*",
+        "*/*c=votedetail*"
       ],
       "run_at": "document_idle"
    } ],
-   "description": "TMBO script to enhance the browsing experience",
    "key": "IyDGzViJ3mT6fX2IBsAWgZKvHPHUJGwTTIvpif8AJ6o=",
-   "name": "This Might Be Awesome",
-   "version": "0.1.1",
-   "manifest_version": 2,
+   "manifest_version": 2
 }
