@@ -12,6 +12,7 @@
  2013-03-12
     * Make it work as a Chrome Extension.
     * Rename it to "This Might Be Awesome."
+    * Integrate work from oliphaunt to show sums on votedetail page for a user.
 
  2010-05-17
     * Sort both votes and voters. (Based on a suggestion from "pixel4e")
@@ -40,11 +41,53 @@
  *** Changelog ***/
 
 // Quick drop-out if we're on the wrong page
+if ( window.location.search.indexOf("c=votedetail") >= 0 ) {
+    sumVotes();
+    return;
+}
 var commentList = document.getElementById("commentList");
 if (!commentList)
     return;
 
 String.prototype.trim = function() { return this.replace(/^\s+|\s+$/, ''); };
+
+// addition by oliphaunt: sum votes.
+function sumVotes() {
+    // do we understand this page?
+    var rightCol = document.getElementById("rightcol");
+    if ( !rightCol ) return;
+
+    var tableList = rightCol.getElementsByTagName("table");
+    if ( !tableList || tableList.length != 1 ) return;
+
+    // apparently so.  iterate over the votes.
+    table = tableList[0];
+    var pos = 0;
+    var neg = 0;
+    for ( var i = 0; i < table.rows.length; ++i ) {
+	var row = table.rows[i];
+	if ( row.cells.length != 3 ) {
+	    // don't know how to deal with this row. skip it.
+	    continue;
+	}
+	pos += parseInt(row.cells[1].textContent);
+	neg -= parseInt(row.cells[2].textContent);
+    }
+
+    // calculate a percentage (if possible)
+    var total = Math.abs(pos) + Math.abs(neg);
+    if ( total <= 0 ) return;
+    var posperc = Math.round(100*pos/total);
+    var text = 'positive: ' + pos + ' (' + posperc + '%)' + ' | negative: ' + neg + ' (' + (100-posperc) + '%)';
+
+    // and display the summary above the votes table
+    var b = document.createElement('b');
+    b.appendChild(document.createTextNode(text));
+    var div = document.createElement('div');
+    div.appendChild(b);
+    div.style.textAlign = 'center';
+    table.parentNode.insertBefore(div,table);
+}
 
 // Set scrolling to the element with the given name.
 function jumpToName(name)
