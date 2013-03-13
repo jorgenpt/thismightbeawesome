@@ -1,14 +1,18 @@
 // ==UserScript==
-// @name           TMBO Summarize
-// @description    TMBO script to summarize the votes of comments.
+// @name           This Might Be Awesome
+// @description    TMBO script to enhance the browsing experience
 // @namespace      http://userscripts.org/users/jorgenpt
 // @include        http*://thismight.be/offensive/*
 // @copyright      2010, Jørgen P. Tjernø (http://userscripts.org/users/jorgenpt)
 // @license        GPL version 3 or any later version; http://www.gnu.org/copyleft/gpl.html
-// @version        0.1.1
+// @version        0.2.0
 // ==/UserScript==
 
 /*** Changelog ***
+ 2013-03-12
+    * Make it work as a Chrome Extension.
+    * Rename it to "This Might Be Awesome."
+
  2010-05-17
     * Sort both votes and voters. (Based on a suggestion from "pixel4e")
 
@@ -34,11 +38,6 @@
     * When going to urls with anchors, rejump to anchor when DOM-modding
       is done.
  *** Changelog ***/
-
-GM_registerMenuCommand("TMBO Summarize v0.1.1 - homepage", function ()
-        { 
-            GM_openInTab('http://userscripts.org/scripts/show/64530');
-        });
 
 // Quick drop-out if we're on the wrong page
 var commentList = document.getElementById("commentList");
@@ -78,7 +77,7 @@ function updateSummaries(entry)
 
     var user = links[0];
     var votes = entry.getElementsByClassName('vote');
-    for (var i = 0; i < votes.length; i++) 
+    for (var i = 0; i < votes.length; i++)
     {
         var vote = votes[i].textContent.trim();
         if (!summaries[vote])
@@ -105,7 +104,7 @@ function sortSummaries()
         voters.sort(byUsername);
         sortable.push([summary, voters]);
     }
-    
+
     sortable.sort();
     summaries = {};
     for (var i = 0; i < sortable.length; ++i)
@@ -136,7 +135,7 @@ var color = 0;
 
 // Go over all the posts, remove empty ones and add them to the summary.
 var entries = commentList.getElementsByClassName("entry");
-for (var i = 0; i < entries.length; ++i) 
+for (var i = 0; i < entries.length; ++i)
 {
     entry = entries[i];
 
@@ -150,7 +149,7 @@ for (var i = 0; i < entries.length; ++i)
         entry.style.display = 'none';
 
     // Update summaries based on this post.
-    updateSummaries(entry);    
+    updateSummaries(entry);
 }
 
 // Sort votes and voters.
@@ -164,7 +163,7 @@ for (var summary in summaries)
     var li = document.createElement('li');
 
     li.textContent = summary + ' ';
-    for (var i = 0; i < voters.length; i++) 
+    for (var i = 0; i < voters.length; i++)
     {
         li.appendChild(voters[i].cloneNode(true));
         li.appendChild(document.createTextNode(', '));
